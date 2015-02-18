@@ -54,6 +54,27 @@ class GoLive_DbBackup extends DbBackup
   // =========================================================================
 
   /**
+   * Controls which (if any) tables will have their data ignored in this database backup.
+   *
+   * @param array|false $tables If set to an array, will merge the given tables with the default list of tables to
+   *                            ignore for data backup in $_ignoreDataTables.  If set to false, no tables will be
+   *                            ignored and a full database backup will be performed.
+   *
+   * @return null
+   */
+  public function setIgnoreDataTables($tables)
+  {
+    if (is_array($tables))
+    {
+      $this->_ignoreDataTables = array_merge($this->_ignoreDataTables, $tables);
+    }
+    else if ($tables === false)
+    {
+      $this->_ignoreDataTables = array();
+    }
+  }
+
+  /**
    * Triggers the database backup including all DML and DDL and writes it out to a file.
    *
    * @param string $backupFileName An alternate file name for the backup file.

@@ -45,11 +45,15 @@ class GoLive_TaskService extends BaseApplicationComponent {
     // Map to a simple array of table names
     $exclude = array();
     foreach ($excludeCollection as $item) {
-      array_push($exclude, $item['table']);
+      if($item['table'] !== '') {
+        array_push($exclude, $item['table']);
+      }
     }
 
-    $backup->setIgnoreDataTables($exclude);
+    // If tasks get copied, then GoLive will try to deploy again!
+    array_push($exclude, 'tasks');
 
+    $backup->setIgnoreDataTables($exclude);
     $backupFile = $backup->run($settings->backupFileName);
 
     return ($backupFile !== false);
