@@ -1,0 +1,159 @@
+{% extends 'golive/_layout' %}
+{% set plugin = craft.plugins.getPlugin('GoLive') %}
+{% set pluginSettings = craft.goLive.getSettings() %}
+
+{% block content %}
+  {% import "_includes/forms" as forms %}
+  {% if craft.config.environmentVariables['goLive_encryptionKey'] is not defined %}
+    <h2 class="error">WAIT! You haven't set an encryption key yet, which means entering passwords here is <strong>not</strong> secure!</h2>
+    <p>
+      <a class="btn" href="{{ url('golive/key') }}">Set an encryption key now</a>
+    </p>
+    <hr>
+  {% endif %}
+
+  <form action="" method="POST">
+    <input type="hidden" name="action" value="plugins/savePluginSettings">
+    <input type="hidden" name="pluginClass" value="{{ plugin.classHandle }}">
+    <input type="hidden" name="redirect" value="golive/settings">
+    {{ getCsrfInput() }}
+
+    <h2>1: Backup Staging Database</h2>
+    {{ forms.editableTableField({
+      cols: {
+        'table': {
+          class: 'code',
+          colId: 'name',
+          heading: 'Table Name (without ' ~ craft.goLive.getTablePrefix ~ ')',
+          type: 'singleline'
+        }
+      },
+      id: 'excludeTables',
+      instructions: 'Craft will always exclude <strong>assetindexdata</strong>, <strong>assettransformindex</strong>, <strong>sessions</strong>, <strong>templatecaches</strong>, <strong>templatecachecriteria</strong>, and <strong>templatecacheelements</strong>',
+      label: 'Exclude Tables From Backup',
+      name: 'settings[backup][excludeTables]',
+      rows: pluginSettings.backup.excludeTables is defined ? pluginSettings.backup.excludeTables : [{table: ''}],
+    }) }}
+    {{
+      forms.lightswitchField({
+        instructions: 'If <strong>on</strong>, the backup file will be kept in <code>craft/storage/backups</code>. Otherwise, it will be deleted after being copied to the production server.',
+        label: 'Keep Backup File?',
+        name: 'settings[backup][keepBackup]',
+        on: pluginSettings.backup.keepBackup is defined ? pluginSettings.backup.keepBackup : ''
+      })
+    }}
+    <hr>
+    <h2>2: Copy Backup to Production</h2>
+    {{ forms.textField({
+      class: 'code',
+      name: 'settings[ssh][hostname]',
+      label: 'Production SFTP Hostname',
+      placeholder: 'Enter hostname',
+      instructions: 'The hostname or IP address to be used for SFTP access to the production server.',
+      value: pluginSettings.ssh.hostname is defined ? pluginSettings.ssh.hostname : ''
+    }) }}
+    {{ forms.textField({
+      class: 'code',
+      name: 'settings[ssh][username]',
+      label: 'Production SFTP Username',
+      placeholder: 'Enter username',
+      instructions: 'The username to use for SFTP authentication.',
+      value: pluginSettings.ssh.username is defined ? pluginSettings.ssh.username : ''
+    }) }}
+    {{ forms.textField({
+      class: 'code',
+      instructions: 'The password to use for SFTP authentication.',
+      label: 'Production SFTP Password',
+      name: 'settings[ssh][password]',
+      placeholder: 'Enter password',
+      type: 'password',
+      value: pluginSettings.ssh.password is defined ?
+        craft.goLive.security.decrypt(pluginSettings.ssh.password) : ''
+    }) }}
+    {{ forms.textField({
+      class: 'code',
+      instructions: 'A writable folder on the production server to which the backup file can be copied.',
+      label: 'Backup File Destination',
+      name: 'settings[copyBackup][destination]',
+      placeholder: 'Enter destination folder',
+      value: pluginSettings.copyBackup.destination is defined ? pluginSettings.copyBackup.destination : ''
+    }) }}
+    <hr>
+    <h2>3: Import Backup to Production</h2>
+    {{ forms.textField({
+      class: 'code',
+      name: 'settings[mysql][hostname]',
+      label: 'MySQL Hostname',
+      placeholder: 'Enter hostname',
+      instructions: 'The hostname or IP address to be used for MySQL access.',
+      value: pluginSettings.mysql.hostname is defined ? pluginSettings.mysql.hostname : ''
+    }) }}
+    {{ forms.textField({
+      class: 'code',
+      name: 'settings[mysql][username]',
+      label: 'MySQL Username',
+      placeholder: 'Enter username',
+      instructions: 'The username to use for MySQL authentication.',
+      value: pluginSettings.mysql.username is defined ? pluginSettings.mysql.username : ''
+    }) }}
+    {{ forms.textField({
+      class: 'code',
+      instructions: 'The password to use for MySQL authentication.',
+      label: 'MySQL Password',
+      name: 'settings[mysql][password]',
+      placeholder: 'Enter password',
+      type: 'password',
+      value: pluginSettings.mysql.password is defined ?
+        craft.goLive.security.decrypt(pluginSettings.mysql.password) : ''
+    }) }}
+    {{ forms.textField({
+      class: 'code',
+      instructions: 'The password to use for MySQL authentication.',
+      label: 'MySQL Database Name',
+      name: 'settings[mysql][dbname]',
+      placeholder: 'Enter database name',
+      value: pluginSettings.mysql.dbname is defined ? pluginSettings.mysql.dbname : ''
+    }) }}
+    {{
+      forms.lightswitchField({
+        instructions: 'If <strong>on</strong>, the backup file will be kept on the remote server after import. Otherwise, it will be deleted.',
+        label: 'Keep Backup File?',
+        name: 'settings[importBackup][keepBackup]',
+        on: pluginSettings.importBackup.keepBackup is defined ? pluginSettings.importBackup.keepBackup : ''
+      })
+    }}
+    <hr>
+    <h2>4: After Import</h2>
+    {{ forms.textField({
+      class: 'code',
+      instructions: 'Commands will be run from this directory. Add your own <code>cd</code> to your commands if you want them to run somewhere else.',
+      label: 'Working Directory',
+      name: 'settings[afterImport][cwd]',
+      value: pluginSettings.afterImport.cwd is defined ? pluginSettings.afterImport.cwd : ''
+    }) }}
+    {{ forms.editableTableField({
+      cols: {
+        'command': {
+          colId: 'name',
+          class: 'code',
+          heading: 'Command',
+          type: 'singleline'
+        }
+      },
+      id: 'afterImportCommands',
+      instructions: 'A series of (optional) shell commands to run after the database is imported.',
+      label: 'Commands to Run After Import',
+      name: 'settings[afterImport][commands]',
+      rows: pluginSettings.afterImport.commands is defined ? pluginSettings.afterImport.commands : [],
+    }) }}
+    <hr>
+    <input type="submit" value="Save Settings" class="btn submit">
+  </form>
+{% endblock %}
+
+{% block foot %}
+  {{ parent() }}
+  {% if craft.request.getParam('firstrun') == 1 %}
+    {% include "golive/_includes/first-run-modal" %}
+  {% endif %}
+{% endblock %}

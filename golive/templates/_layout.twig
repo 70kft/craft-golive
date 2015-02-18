@@ -1,0 +1,24 @@
+{% extends '_layouts/cp' %}
+
+{% if not craft.goLive.enabled %}
+  {% redirect 'settings/plugins' %}
+{% endif %}
+
+{% set title = 'Go Live' %}
+
+{% set tabs = {
+  'golive': {
+    label: 'Go Live',
+    url: url('golive')
+  },
+  'golive-settings': {
+    label: 'Settings',
+    url: url('golive/settings')
+  },
+  'golive-key': {
+    label: 'Encryption Key',
+    url: url('golive/key')
+  }
+} %}
+
+{% set selectedTab = craft.request.path|replace('/','-') %}

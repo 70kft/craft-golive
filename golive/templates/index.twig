@@ -1,0 +1,20 @@
+{% extends 'golive/_layout' %}
+{% includeJsResource 'golive/js/deploy.js' %}
+
+{% block content %}
+  <h2>Ready to Go Live?</h2>
+  <p>By pressing the <strong>Go Live</strong> button below, all of the changes in your staging site will be duplicated in production. <br>
+  Ready?</p>
+  <section class="golive-component">
+    <p>
+      <a class="btn submit golive" href="#">Go Live!</a>
+    </p>
+    <div class="golive-progressbar">
+      <div class="alldone"></div>
+      <div class="progressbar">
+        <div class="progressbar-inner"></div>
+      </div>
+      <div class="progressbar-text centeralign"></div>
+    </div>
+  </section>
+{% endblock %}

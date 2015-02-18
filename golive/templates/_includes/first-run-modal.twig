@@ -1,0 +1,38 @@
+<div id="golive-first-run" class="modal-shade">
+  <div class="modal">
+    <div class="slides">
+      <div class="slide">
+        <h2 class="centeralign">Thanks for trying <strong>Go Live!</strong></h2>
+        <p>Go Live makes moving your work from staging to production as easy as clicking a button. No more error-prone migrations or nervously making changes in production!</p>
+        <p>
+          <img src="{{ resourceUrl('golive/img/golive-animation.gif') }}" alt="Animation of Go Live process">
+        </p>
+        <p>When it's time to show your new content to the world, just click <strong>Go Live</strong> and all your changes are duplicated from staging to production like magic.</p>
+
+        <p class="centeralign">
+          <a href="#" class="btn-right">Learn More</a>
+        </p>
+      </div>
+      <div class="slide to-right">
+        <h2 class="centeralign">Of course, there’s no such thing as magic.</h2>
+        <p>Go Live takes a little bit of configuration to get started. You’ll need to provide SSH and MySQL credentials to your production web server.</p>
+        <p>
+          <img src="{{ resourceUrl('golive/img/golive-settings.png') }}" alt="Go Live settings fields">
+        </p>
+        <p>Go Live must be able to access your production site via SSH, and will only duplicate your staging database to production on it's own. You still have to provide some commands to take care of getting all of your files moved to production (you know, something like <code>`git pull origin master</code>)</p>
+        <p class="centeralign">
+          <a href="#" class="btn-right">Keep Going</a>
+        </p>
+      </div>
+      <div class="slide to-right">
+        <h2 class="centeralign">That’s it!</h2>
+        <p class="centeralign">
+          <a href="#" class="btn submit close-modal">Get Started</a>
+        </p>
+      </div>
+      <div class="slide-btn-left btn-left"></div>
+      <div class="slide-btn-right btn-right show"></div>
+    </div>
+  </div>
+</div>
+{% includeJsResource('golive/js/first-run-modal.js') %}
