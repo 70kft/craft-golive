@@ -64,6 +64,7 @@ class GoLive_TaskService extends BaseApplicationComponent {
    * Copies the database dump to the production server via SFTP
    *
    * @param BaseModel $settings The task's settings
+   * @param mixed $arg An optional second argument
    *
    * @return bool
    */
@@ -106,6 +107,7 @@ class GoLive_TaskService extends BaseApplicationComponent {
    * Import the database dump by running mysql from the command line (assumes Bash?)
    *
    * @param BaseModel $settings The task's settings
+   * @param mixed $arg An optional second argument
    *
    * @return bool
    */
@@ -170,6 +172,7 @@ class GoLive_TaskService extends BaseApplicationComponent {
    * Run a user-defined task on the command line
    *
    * @param BaseModel $settings The task's settings
+   * @param mixed $arg The index of the command to be run
    *
    * @return bool
    */
@@ -197,11 +200,25 @@ class GoLive_TaskService extends BaseApplicationComponent {
   // Private methods
   //---
 
+  /**
+   * Merges an array of before-backup tasks with the provided list of existing tasks
+   *
+   * @param array $taskList The existing list of tasks
+   *
+   * @return array
+   */
   private function _addBeforeBackupTasks($taskList = array()) {
 
     return $taskList;
   }
 
+  /**
+   * Merges an array of backup tasks with the provided list of existing tasks
+   *
+   * @param array $taskList The existing list of tasks
+   *
+   * @return array
+   */
   private function _addBackupTasks($taskList = array()) {
     $tasks = $this->_getBackupTasks();
 
@@ -210,6 +227,13 @@ class GoLive_TaskService extends BaseApplicationComponent {
     return $taskList;
   }
 
+  /**
+   * Merges an array of after-import tasks with the provided list of existing tasks
+   *
+   * @param array $taskList The existing list of tasks
+   *
+   * @return array
+   */
   private function _addAfterImportTasks($taskList = array()) {
     $afterImportCommands =
       craft()->plugins->getPlugin('goLive')->getSettings()->afterImport['commands'];
@@ -233,6 +257,11 @@ class GoLive_TaskService extends BaseApplicationComponent {
     return $taskList;
   }
 
+  /**
+   * Returns a list of statically defined tasks that are not user-editable
+   *
+   * @return array
+   */
   private function _getBackupTasks() {
     $tasksPath = CRAFT_PLUGINS_PATH . 'golive/config/tasks.php';
     $tasks = require $tasksPath;
@@ -240,6 +269,11 @@ class GoLive_TaskService extends BaseApplicationComponent {
     return $tasks['backup'];
   }
 
+  /**
+   * Returns the plugin's settings.
+   *
+   * @return BaseModel
+   */
   private function _getSettings() {
     return craft()->plugins->getPlugin('GoLive')->getSettings();
   }
