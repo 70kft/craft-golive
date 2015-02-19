@@ -34,21 +34,21 @@ Go Live needs to know quite a bit about your production server in order to deplo
 1. Run some optional console commands on the server you're deploying _to_
 
 #### 1: Before Backup
-![FPO Image](http://fpoimg.com/640x320)
+<img src="doc/images/golive-settings-1.png" alt="Go Live Before Backup Settings" style="max-width: 100%;">
 
 * **Commands to Run Before Backup:** In each row of the table, write a console command that will run on the current system prior to backing up the databse. This would typically consist of commands like `git add` or `git push` to publish files that have changed in staging.
 
 #### 2: Backup Staging Database
-![FPO Image](http://fpoimg.com/640x320)
+<img src="doc/images/golive-settings-2.png" alt="Go Live Backup Settings" style="max-width: 100%;">
 
 * **Exclude Tables From Backup:** In each row of the table, write the non-prefixed name of a table that you do not want backed up and sent to production. This would typically include tables that gather user-generated data that would be otherwise overwritten during the deployment.
 * **Keep Backup File?:** If the switch is on, the SQL backup file will be kept after performing the backup. Otherwise, it will be deleted as soon as the deployment finishes.
 
 #### 3: Copy Backup to Production
-![FPO Image](http://fpoimg.com/640x320)
+<img src="doc/images/golive-settings-3.png" alt="Go Live Copy Backup Settings" style="max-width: 100%;">
 
 #### 4: Import Backup to Production
-![FPO Image](http://fpoimg.com/640x320)
+<img src="doc/images/golive-settings-4.png" alt="Go Live Import Settings" style="max-width: 100%;">
 
 #### 5: After Import
-![FPO Image](http://fpoimg.com/640x320)
+<img src="doc/images/golive-settings-5.png" alt="Go Live After Import Settings" style="max-width: 100%;">
