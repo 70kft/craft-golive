@@ -53,13 +53,17 @@ class GoLivePlugin extends BasePlugin {
       'afterImport' => array(AttributeType::Mixed, 'default' => array(
         'commands' => array()
       )),
-      'ssh' => array(AttributeType::Mixed, 'default' => array()),
+      'ssh' => array(AttributeType::Mixed, 'default' => array(
+        'local' => array(),
+        'remote' => array()
+      )),
       'mysql' => array(AttributeType::Mixed, 'default' => array())
     );
   }
 
   public function prepSettings($settings) {
-    $settings['ssh']['password'] = craft()->goLive_security->encrypt($settings['ssh']['password']);
+    $settings['ssh']['local']['password'] = craft()->goLive_security->encrypt($settings['ssh']['local']['password']);
+    $settings['ssh']['remote']['password'] = craft()->goLive_security->encrypt($settings['ssh']['remote']['password']);
     $settings['mysql']['password'] = craft()->goLive_security->encrypt($settings['mysql']['password']);
 
     return $settings;

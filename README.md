@@ -17,7 +17,7 @@ Because Go Live stores the SSH and MySQL passwords to your production server, it
 
 ```
 'environmentVariables' => array(
-    'goLive_encryptionKey' => 'zliTE5pHe5zRUDPhh+gz132qA6jeGJ9pjlQD+yahrHA='
+    'goLive_encryptionKey' => '(your encryption key here)'
 )
 ```
 

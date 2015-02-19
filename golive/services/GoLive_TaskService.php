@@ -81,9 +81,9 @@ class GoLive_TaskService extends BaseApplicationComponent {
     $destination = rtrim($destination, '/') . '/';
     $destination = $destination . basename($pathToBackup);
 
-    $sshHostname = $this->_getSettings()['ssh']['hostname'];
-    $sshUsername = $this->_getSettings()['ssh']['username'];
-    $sshPassword = craft()->goLive_security->decrypt($this->_getSettings()['ssh']['password']);
+    $sshHostname = $this->_getSettings()['ssh']['remote']['hostname'];
+    $sshUsername = $this->_getSettings()['ssh']['remote']['username'];
+    $sshPassword = craft()->goLive_security->decrypt($this->_getSettings()['ssh']['remote']['password']);
 
     $sftp = new Net_SFTP($sshHostname);
     $sftp->login($sshUsername, $sshPassword);
@@ -124,9 +124,9 @@ class GoLive_TaskService extends BaseApplicationComponent {
     $destination = rtrim($destination, '/') . '/';
     $destination = $destination . basename($pathToBackup);
 
-    $sshHostname = $this->_getSettings()['ssh']['hostname'];
-    $sshUsername = $this->_getSettings()['ssh']['username'];
-    $sshPassword = craft()->goLive_security->decrypt($this->_getSettings()['ssh']['password']);
+    $sshHostname = $this->_getSettings()['ssh']['remote']['hostname'];
+    $sshUsername = $this->_getSettings()['ssh']['remote']['username'];
+    $sshPassword = craft()->goLive_security->decrypt($this->_getSettings()['ssh']['remote']['password']);
 
     $mysqlHostname = $this->_getSettings()['mysql']['hostname'];
     $mysqlUsername = $this->_getSettings()['mysql']['username'];
@@ -167,6 +167,37 @@ class GoLive_TaskService extends BaseApplicationComponent {
     return true;
   }
 
+  /**
+   * Run a user-defined task on the command line
+   *
+   * @todo Combine this function and afterImportTask (which are practically identical)
+   *       into a single function.
+   *
+   * @param BaseModel $settings The task's settings
+   * @param mixed $arg The index of the command to be run
+   *
+   * @return bool
+   */
+  public function beforeBackupTask($settings, $arg = null) {
+    $commands = $this->_getSettings()['beforeBackup']['commands'];
+    $command = $commands[$arg]['command'];
+
+    $sshHostname = $this->_getSettings()['ssh']['local']['hostname'];
+    $sshUsername = $this->_getSettings()['ssh']['local']['username'];
+    $sshPassword = craft()->goLive_security->decrypt($this->_getSettings()['ssh']['local']['password']);
+
+    $ssh = new Net_SSH2($sshHostname);
+    $ssh->login($sshUsername, $sshPassword);
+
+    // Prepend to any command, as Net_SSH2 doesn't persist state changes
+    // across multiple calls to exec()
+    $cdCommand = 'cd ' . $this->_getSettings()['beforeBackup']['cwd'] .'; ';
+
+    $ssh->exec($cdCommand . $command);
+
+    return true;
+  }
+
 
   /**
    * Run a user-defined task on the command line
@@ -180,9 +211,9 @@ class GoLive_TaskService extends BaseApplicationComponent {
     $commands = $this->_getSettings()['afterImport']['commands'];
     $command = $commands[$arg]['command'];
 
-    $sshHostname = $this->_getSettings()['ssh']['hostname'];
-    $sshUsername = $this->_getSettings()['ssh']['username'];
-    $sshPassword = craft()->goLive_security->decrypt($this->_getSettings()['ssh']['password']);
+    $sshHostname = $this->_getSettings()['ssh']['remote']['hostname'];
+    $sshUsername = $this->_getSettings()['ssh']['remote']['username'];
+    $sshPassword = craft()->goLive_security->decrypt($this->_getSettings()['ssh']['remote']['password']);
 
     $ssh = new Net_SSH2($sshHostname);
     $ssh->login($sshUsername, $sshPassword);
@@ -208,6 +239,24 @@ class GoLive_TaskService extends BaseApplicationComponent {
    * @return array
    */
   private function _addBeforeBackupTasks($taskList = array()) {
+    $beforeBackupCommands =
+      craft()->plugins->getPlugin('goLive')->getSettings()->beforeBackup['commands'];
+
+    $beforeBackupTasks = array();
+
+    foreach ($beforeBackupCommands as $key => $command) {
+
+      $task = array(
+        'function' => array(
+          'beforeBackupTask',
+          $key
+        ),
+        'message' => sprintf('Running local task <code>%s</code>...', $command['command'])
+      );
+      array_push($beforeBackupTasks, $task);
+    }
+
+    $taskList = array_merge($taskList, $beforeBackupTasks);
 
     return $taskList;
   }

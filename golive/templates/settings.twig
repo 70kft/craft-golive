@@ -18,6 +18,39 @@
     <input type="hidden" name="redirect" value="golive/settings">
     {{ getCsrfInput() }}
     <h2>1: Before Backup</h2>
+    {{ forms.textField({
+      class: 'code',
+      name: 'settings[ssh][local][hostname]',
+      label: 'Staging SSH Hostname',
+      placeholder: 'Enter hostname',
+      instructions: 'The hostname or IP address to be used for SSH access to this server (usually <strong>localhost</strong>).',
+      value: pluginSettings.ssh.local.hostname is defined ? pluginSettings.ssh.local.hostname : ''
+    }) }}
+    {{ forms.textField({
+      class: 'code',
+      name: 'settings[ssh][local][username]',
+      label: 'Staging SSH Username',
+      placeholder: 'Enter username',
+      instructions: 'The username to use for SSH authentication.',
+      value: pluginSettings.ssh.local.username is defined ? pluginSettings.ssh.local.username : ''
+    }) }}
+    {{ forms.textField({
+      class: 'code',
+      instructions: 'The password to use for SSH authentication.',
+      label: 'Staging SSH Password',
+      name: 'settings[ssh][local][password]',
+      placeholder: 'Enter password',
+      type: 'password',
+      value: pluginSettings.ssh.local.password is defined ?
+        craft.goLive.security.decrypt(pluginSettings.ssh.local.password) : ''
+    }) }}
+    {{ forms.textField({
+      class: 'code',
+      instructions: 'Commands will be run from this directory. Add your own <code>cd</code> to your commands if you want them to run somewhere else.',
+      label: 'Working Directory',
+      name: 'settings[beforeBackup][cwd]',
+      value: pluginSettings.beforeBackup.cwd is defined ? pluginSettings.beforeBackup.cwd : ''
+    }) }}
     {{ forms.editableTableField({
       cols: {
         'command': {
@@ -62,29 +95,29 @@
     <h2>3: Copy Backup to Production</h2>
     {{ forms.textField({
       class: 'code',
-      name: 'settings[ssh][hostname]',
+      name: 'settings[ssh][remote][hostname]',
       label: 'Production SFTP Hostname',
       placeholder: 'Enter hostname',
       instructions: 'The hostname or IP address to be used for SFTP access to the production server.',
-      value: pluginSettings.ssh.hostname is defined ? pluginSettings.ssh.hostname : ''
+      value: pluginSettings.ssh.remote.hostname is defined ? pluginSettings.ssh.remote.hostname : ''
     }) }}
     {{ forms.textField({
       class: 'code',
-      name: 'settings[ssh][username]',
+      name: 'settings[ssh][remote][username]',
       label: 'Production SFTP Username',
       placeholder: 'Enter username',
       instructions: 'The username to use for SFTP authentication.',
-      value: pluginSettings.ssh.username is defined ? pluginSettings.ssh.username : ''
+      value: pluginSettings.ssh.remote.username is defined ? pluginSettings.ssh.remote.username : ''
     }) }}
     {{ forms.textField({
       class: 'code',
       instructions: 'The password to use for SFTP authentication.',
       label: 'Production SFTP Password',
-      name: 'settings[ssh][password]',
+      name: 'settings[ssh][remote][password]',
       placeholder: 'Enter password',
       type: 'password',
-      value: pluginSettings.ssh.password is defined ?
-        craft.goLive.security.decrypt(pluginSettings.ssh.password) : ''
+      value: pluginSettings.ssh.remote.password is defined ?
+        craft.goLive.security.decrypt(pluginSettings.ssh.remote.password) : ''
     }) }}
     {{ forms.textField({
       class: 'code',
