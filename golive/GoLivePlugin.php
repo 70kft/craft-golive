@@ -35,6 +35,9 @@ class GoLivePlugin extends BasePlugin {
 
   protected function defineSettings() {
     return array(
+      'beforeBackup' => array(AttributeType::Mixed, 'default' => array(
+        'commands' => array()
+      )),
       'backup' => array(AttributeType::Mixed, 'default' => array(
         'keepBackup' => '',
         'excludeTables' => array(

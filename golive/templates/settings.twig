@@ -17,8 +17,24 @@
     <input type="hidden" name="pluginClass" value="{{ plugin.classHandle }}">
     <input type="hidden" name="redirect" value="golive/settings">
     {{ getCsrfInput() }}
-
-    <h2>1: Backup Staging Database</h2>
+    <h2>1: Before Backup</h2>
+    {{ forms.editableTableField({
+      cols: {
+        'command': {
+          colId: 'name',
+          class: 'code',
+          heading: 'Command',
+          type: 'singleline'
+        }
+      },
+      id: 'beforeBackupCommands',
+      instructions: 'A series of (optional) shell commands to run before the database is dumped. These will be run on <strong>this server</strong>.',
+      label: 'Commands to Run Before Backup',
+      name: 'settings[beforeBackup][commands]',
+      rows: pluginSettings.beforeBackup.commands is defined ? pluginSettings.beforeBackup.commands : [],
+    }) }}
+    <hr>
+    <h2>2: Backup Staging Database</h2>
     {{ forms.editableTableField({
       cols: {
         'table': {
@@ -43,7 +59,7 @@
       })
     }}
     <hr>
-    <h2>2: Copy Backup to Production</h2>
+    <h2>3: Copy Backup to Production</h2>
     {{ forms.textField({
       class: 'code',
       name: 'settings[ssh][hostname]',
@@ -79,7 +95,7 @@
       value: pluginSettings.copyBackup.destination is defined ? pluginSettings.copyBackup.destination : ''
     }) }}
     <hr>
-    <h2>3: Import Backup to Production</h2>
+    <h2>4: Import Backup to Production</h2>
     {{ forms.textField({
       class: 'code',
       name: 'settings[mysql][hostname]',
@@ -123,7 +139,7 @@
       })
     }}
     <hr>
-    <h2>4: After Import</h2>
+    <h2>5: After Import</h2>
     {{ forms.textField({
       class: 'code',
       instructions: 'Commands will be run from this directory. Add your own <code>cd</code> to your commands if you want them to run somewhere else.',

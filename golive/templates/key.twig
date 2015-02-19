@@ -10,7 +10,9 @@
     {% endif %}
     <p>Go Live encrypts the password you provide. In order to do this securely, however, you must create a key to encrypt and decrypt the data. Here's a randomly-generated encryption key (refresh this page to get a new one): <strong><code>{{ randomKey }}</code></strong></p>
     <p>You can use this encryption key by adding it to <code>general.php</code>:</p>
-<pre><code>'goLive_encryptionKey' => '{{ randomKey }}'
+<pre><code>'environmentVariables' => array(
+  'goLive_encryptionKey' => '{{ randomKey }}'
+)
 </code></pre>
   <p class="warning"><strong>Note: </strong> changing the encryption key will make it impossible to decrypt any passwords you have already saved. You will need to re-enter all passwords after changing the key.</p>
 </div>

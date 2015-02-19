@@ -97,7 +97,9 @@ class GoLive_DbBackup extends DbBackup
     $this->_filePath = craft()->path->getDbBackupPath().StringHelper::toLowerCase($fileName);
 
     // Clear the file before beginning this backup. If you lose data, that's your problem!
-    IOHelper::clearFile($this->_filePath);
+    if(IOHelper::fileExists($this->_filePath)) {
+      IOHelper::clearFile($this->_filePath);  
+    }
 
     $this->_processHeader();
 
