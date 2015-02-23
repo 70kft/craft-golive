@@ -1,9 +1,11 @@
 {% extends 'golive/_layout' %}
+
+{% import "_includes/forms" as forms %}
+
 {% set plugin = craft.plugins.getPlugin('GoLive') %}
 {% set pluginSettings = craft.goLive.getSettings() %}
 
 {% block content %}
-  {% import "_includes/forms" as forms %}
   {% if craft.config.environmentVariables['goLive_encryptionKey'] is not defined %}
     <h2 class="error">WAIT! You haven't set an encryption key yet, which means entering passwords here is <strong>not</strong> secure!</h2>
     <p>
@@ -18,32 +20,6 @@
     <input type="hidden" name="redirect" value="golive/settings">
     {{ getCsrfInput() }}
     <h2>1: Before Backup</h2>
-    {{ forms.textField({
-      class: 'code',
-      name: 'settings[ssh][local][hostname]',
-      label: 'Staging SSH Hostname',
-      placeholder: 'Enter hostname',
-      instructions: 'The hostname or IP address to be used for SSH access to this server (usually <strong>localhost</strong>).',
-      value: pluginSettings.ssh.local.hostname is defined ? pluginSettings.ssh.local.hostname : ''
-    }) }}
-    {{ forms.textField({
-      class: 'code',
-      name: 'settings[ssh][local][username]',
-      label: 'Staging SSH Username',
-      placeholder: 'Enter username',
-      instructions: 'The username to use for SSH authentication.',
-      value: pluginSettings.ssh.local.username is defined ? pluginSettings.ssh.local.username : ''
-    }) }}
-    {{ forms.textField({
-      class: 'code',
-      instructions: 'The password to use for SSH authentication.',
-      label: 'Staging SSH Password',
-      name: 'settings[ssh][local][password]',
-      placeholder: 'Enter password',
-      type: 'password',
-      value: pluginSettings.ssh.local.password is defined ?
-        craft.goLive.security.decrypt(pluginSettings.ssh.local.password) : ''
-    }) }}
     {{ forms.textField({
       class: 'code',
       instructions: 'Commands will be run from this directory. Add your own <code>cd</code> to your commands if you want them to run somewhere else.',
@@ -95,32 +71,6 @@
     <h2>3: Copy Backup to Production</h2>
     {{ forms.textField({
       class: 'code',
-      name: 'settings[ssh][remote][hostname]',
-      label: 'Production SFTP Hostname',
-      placeholder: 'Enter hostname',
-      instructions: 'The hostname or IP address to be used for SFTP access to the production server.',
-      value: pluginSettings.ssh.remote.hostname is defined ? pluginSettings.ssh.remote.hostname : ''
-    }) }}
-    {{ forms.textField({
-      class: 'code',
-      name: 'settings[ssh][remote][username]',
-      label: 'Production SFTP Username',
-      placeholder: 'Enter username',
-      instructions: 'The username to use for SFTP authentication.',
-      value: pluginSettings.ssh.remote.username is defined ? pluginSettings.ssh.remote.username : ''
-    }) }}
-    {{ forms.textField({
-      class: 'code',
-      instructions: 'The password to use for SFTP authentication.',
-      label: 'Production SFTP Password',
-      name: 'settings[ssh][remote][password]',
-      placeholder: 'Enter password',
-      type: 'password',
-      value: pluginSettings.ssh.remote.password is defined ?
-        craft.goLive.security.decrypt(pluginSettings.ssh.remote.password) : ''
-    }) }}
-    {{ forms.textField({
-      class: 'code',
       instructions: 'A writable folder on the production server to which the backup file can be copied.',
       label: 'Backup File Destination',
       name: 'settings[copyBackup][destination]',
@@ -129,40 +79,6 @@
     }) }}
     <hr>
     <h2>4: Import Backup to Production</h2>
-    {{ forms.textField({
-      class: 'code',
-      name: 'settings[mysql][hostname]',
-      label: 'MySQL Hostname',
-      placeholder: 'Enter hostname',
-      instructions: 'The hostname or IP address to be used for MySQL access.',
-      value: pluginSettings.mysql.hostname is defined ? pluginSettings.mysql.hostname : ''
-    }) }}
-    {{ forms.textField({
-      class: 'code',
-      name: 'settings[mysql][username]',
-      label: 'MySQL Username',
-      placeholder: 'Enter username',
-      instructions: 'The username to use for MySQL authentication.',
-      value: pluginSettings.mysql.username is defined ? pluginSettings.mysql.username : ''
-    }) }}
-    {{ forms.textField({
-      class: 'code',
-      instructions: 'The password to use for MySQL authentication.',
-      label: 'MySQL Password',
-      name: 'settings[mysql][password]',
-      placeholder: 'Enter password',
-      type: 'password',
-      value: pluginSettings.mysql.password is defined ?
-        craft.goLive.security.decrypt(pluginSettings.mysql.password) : ''
-    }) }}
-    {{ forms.textField({
-      class: 'code',
-      instructions: 'The password to use for MySQL authentication.',
-      label: 'MySQL Database Name',
-      name: 'settings[mysql][dbname]',
-      placeholder: 'Enter database name',
-      value: pluginSettings.mysql.dbname is defined ? pluginSettings.mysql.dbname : ''
-    }) }}
     {{
       forms.lightswitchField({
         instructions: 'If <strong>on</strong>, the backup file will be kept on the remote server after import. Otherwise, it will be deleted.',

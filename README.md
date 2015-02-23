@@ -1,10 +1,10 @@
 # Go Live plugin for Craft
 
-Makes moving changes from staging to production as easy as pressing a button!
+Go Live makes moving changes from staging to production as easy as pressing a button!
 
 ## Installation
 
-To install Go Live, copy the `golive/` folder into `craft/plugins/`, and then go to **Settings &gt; Plugins** and click the **Install** button next to "Go Live".
+To install Go Live, copy the `golive/` folder into `craft/plugins/`, and then go to **Settings &rsaquo; Plugins** and click the **Install** button next to "Go Live".
 
 ## Configuration
 
@@ -46,6 +46,12 @@ Go Live needs to know quite a bit about your production server in order to deplo
 
 #### 3: Copy Backup to Production
 <img src="doc/images/golive-settings-3.png" alt="Go Live Copy Backup Settings" style="max-width: 100%;">
+
+**Important: The credentials provided in this section are used in all steps from here on. The MySQL commands in step 4 and any user-provided commands in step 5 are all executed via SSH. Make sure you provide credentials with sufficient permission to perform all of the actions that follow.**
+
+* **Production SFTP Hostname:** The hostname or IP address used to access the remote server via SSH and SFTP.
+* **Production SSH Username:** The username to use when logging in.
+* **Production SSH Password:** The password to use when logging in.
 
 #### 4: Import Backup to Production
 <img src="doc/images/golive-settings-4.png" alt="Go Live Import Settings" style="max-width: 100%;">
