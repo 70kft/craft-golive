@@ -2,12 +2,15 @@
 namespace Craft;
 
 /**
+ * @author 70kft <http://70kft.com>
+ * @see http://buildwithcraft.com/classreference/etc/db/DbBackup
+ * @package craft.plugins.golive.etc.db
+ *
  * This class provides methods for backing up and restore Craft databases.
  * GoLive_DbBackup is almost identical to DbBackup, with the following changes:
  *
  * 1. run() accepts a $fileName parameter that will be used instead of Craft's
  *    automatic naming system.
- * 1. run()
  */
 class GoLive_DbBackup extends DbBackup
 {
@@ -98,7 +101,7 @@ class GoLive_DbBackup extends DbBackup
 
     // Clear the file before beginning this backup. If you lose data, that's your problem!
     if(IOHelper::fileExists($this->_filePath)) {
-      IOHelper::clearFile($this->_filePath);  
+      IOHelper::clearFile($this->_filePath);
     }
 
     $this->_processHeader();

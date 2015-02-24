@@ -4,16 +4,32 @@ namespace Craft;
 
 class GoLive_DeployTask extends BaseTask {
 
+  /**
+   * Returns a description of what's happening while this task runs
+   * @return string
+   */
   public function getDescription() {
     return Craft::t('Running Go Live');
   }
 
+  /**
+   * Gets the total number of steps in the task, including all user-defined commands
+   *
+   * @return int
+   */
   public function getTotalSteps() {
     return count(
       craft()->goLive_task->enumerateTasks()
     );
   }
 
+  /**
+   * Called by the Craft task runner as many times as there are steps.
+   *
+   * @param int $step
+   *
+   * @return bool
+   */
   public function runStep($step) {
     $tasks = craft()->goLive_task->enumerateTasks();
     $settings = $this->getSettings();
@@ -29,11 +45,15 @@ class GoLive_DeployTask extends BaseTask {
     return craft()->goLive_task->$taskFunction[0]($settings, $taskArgument);
   }
 
+  /**
+   * Sets basic types for settings
+   *
+   * @return array
+   */
   protected function defineSettings()
   {
     return array(
-      'backupFileName' => AttributeType::String,
-      'elementId' => AttributeType::Mixed,
+      'backupFileName' => AttributeType::String
     );
   }
 }

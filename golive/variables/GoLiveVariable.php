@@ -33,10 +33,20 @@ class GoLiveVariable {
     return craft()->goLive_security;
   }
 
+  /**
+   * Returns the attributes of the plugin's settings model
+   *
+   * @return array
+   */
   public function getSettings() {
     return $this->settings->attributes;
   }
 
+  /**
+   * Returns the prefix Craft uses for table names
+   *
+   * @return string
+   */
   public function getTablePrefix() {
     return craft()->db->tablePrefix;
   }
