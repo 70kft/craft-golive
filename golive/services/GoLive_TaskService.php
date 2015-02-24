@@ -38,20 +38,22 @@ class GoLive_TaskService extends BaseApplicationComponent {
    */
   public function backup($settings) {
     $backup = new GoLive_DbBackup();
+    // If tasks get copied, then GoLive will try to deploy again!
+    $exclude = array('tasks');
 
-    // The settings stores excluded tables as a collection, with table as a property.
-    $excludeCollection = $this->getSettings()['backup']['excludeTables'];
-
-    // Map to a simple array of table names
-    $exclude = array();
-    foreach ($excludeCollection as $item) {
-      if($item['table'] !== '') {
-        array_push($exclude, $item['table']);
+    // If the user wants to exclude some tables, add them to the list
+    if (
+      isset($this->getSettings()['backup']['excludeTables']) &&
+      count($this->getSettings()['backup']['excludeTables']) > 0
+    ) {
+      $excludeCollection = $this->getSettings()['backup']['excludeTables'];
+      // Map to a simple array of table names
+      foreach ($excludeCollection as $item) {
+        if($item['table'] !== '') {
+          array_push($exclude, $item['table']);
+        }
       }
     }
-
-    // If tasks get copied, then GoLive will try to deploy again!
-    array_push($exclude, 'tasks');
 
     $backup->setIgnoreDataTables($exclude);
     $backupFile = $backup->run($settings->backupFileName);
@@ -209,9 +211,15 @@ class GoLive_TaskService extends BaseApplicationComponent {
    * @return array
    */
   private function _addBeforeBackupTasks($taskList = array()) {
-    $beforeBackupCommands =
-      craft()->plugins->getPlugin('goLive')->getSettings()->beforeBackup['commands'];
+    // return w/o changes if there are no tasks to add
+    if(
+      !isset($this->getSettings()->beforeBackup['commands']) ||
+      count($this->getSettings()->beforeBackup['commands']) === 0
+    ) {
+      return $taskList;
+    }
 
+    $beforeBackupCommands = $this->getSettings()->beforeBackup['commands'];
     $beforeBackupTasks = array();
 
     foreach ($beforeBackupCommands as $key => $command) {
@@ -258,6 +266,14 @@ class GoLive_TaskService extends BaseApplicationComponent {
    * @return array
    */
   private function _addAfterImportTasks($taskList = array()) {
+    // return w/o changes if there are no tasks to add
+    if(
+      !isset($this->getSettings()->afterImport['commands']) ||
+      count($this->getSettings()->afterImport['commands']) === 0
+    ) {
+      return $taskList;
+    }
+
     $afterImportCommands =
       craft()->plugins->getPlugin('goLive')->getSettings()->afterImport['commands'];
 

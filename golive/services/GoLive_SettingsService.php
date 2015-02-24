@@ -170,7 +170,7 @@ class GoLive_SettingsService extends BaseApplicationComponent {
       isset($settings['beforeBackup']['commands']) &&
       count($settings['beforeBackup']['commands']) !== 0 ) {
       if( trim($settings['beforeBackup']['cwd']) === '') {
-        throw new Exception(self::$exceptionPrefix . 'The working directory for before-backup commands must not be empty.');
+        throw new HttpException(500, self::$exceptionPrefix . 'The working directory for before-backup commands must not be empty.');
       }
     }
 
@@ -179,7 +179,7 @@ class GoLive_SettingsService extends BaseApplicationComponent {
     if(
       !isset($settings['copyBackup']['destination']) ||
       trim($settings['copyBackup']['destination']) === '' ) {
-      throw new Exception(self::$exceptionPrefix . 'The destination for copying the backup must not be empty.');
+      throw new HttpException(500, self::$exceptionPrefix . 'The destination for copying the backup must not be empty.');
     }
 
     // If there is one or more afterImport command, we need a working directory
@@ -187,7 +187,7 @@ class GoLive_SettingsService extends BaseApplicationComponent {
       isset($settings['afterImport']['commands']) &&
       count($settings['afterImport']['commands']) !== 0 ) {
       if( trim($settings['afterImport']['cwd']) === '') {
-        throw new Exception(self::$exceptionPrefix . 'The working directory for after-import commands must not be empty.');
+        throw new HttpException(500, self::$exceptionPrefix . 'The working directory for after-import commands must not be empty.');
       }
     }
 
@@ -202,7 +202,7 @@ class GoLive_SettingsService extends BaseApplicationComponent {
         trim($settings['ssh']['local']['username']) === '' ||
         trim($settings['ssh']['local']['password']) === ''
       ) {
-        throw new Exception(self::$exceptionPrefix . 'None of the local SSH credentials may be empty.');
+        throw new HttpException(500, self::$exceptionPrefix . 'None of the local SSH credentials may be empty.');
       }
     }
 
@@ -212,7 +212,7 @@ class GoLive_SettingsService extends BaseApplicationComponent {
       trim($settings['ssh']['remote']['username']) === '' ||
       trim($settings['ssh']['remote']['password']) === ''
     ) {
-      throw new Exception(self::$exceptionPrefix . 'None of the remote SSH credentials may be empty.');
+      throw new HttpException(500, self::$exceptionPrefix . 'None of the remote SSH credentials may be empty.');
     }
 
     // The remote MySQL credentials must be sane
@@ -222,7 +222,7 @@ class GoLive_SettingsService extends BaseApplicationComponent {
       trim($settings['mysql']['password']) === '' ||
       trim($settings['mysql']['dbname']) === ''
     ) {
-      throw new Exception(self::$exceptionPrefix . 'None of the remote MySQL credentials may be empty.');
+      throw new HttpException(500, self::$exceptionPrefix . 'None of the remote MySQL credentials may be empty.');
     }
   }
 }

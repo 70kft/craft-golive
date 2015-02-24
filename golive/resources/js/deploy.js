@@ -40,7 +40,14 @@
       // This request will last as long as the task itself if gzip is enabled,
       // so just shut it down to free up the xhr slot
       GoLiveComponent.taskRunnerRequest =
-        $.get(Craft.actionUrl + '/goLive/deploy/createTask');
+        $.get(Craft.actionUrl + '/goLive/deploy/createTask')
+        .fail(function (xhr) {
+          if(! xhr.hasOwnProperty('responseJSON')) {
+            return;
+          }
+
+          alert(xhr.responseJSON.error);
+        });
       GoLiveComponent.monitorTask();
       GoLiveComponent.setProgress('pending', '');
     });
@@ -71,7 +78,7 @@
           return this;
         }
 
-        // GoLiveComponent.taskRunnerRequest.abort();
+        GoLiveComponent.taskRunnerRequest.abort();
 
         var totalSteps = GoLiveComponent.tasks.length,
           taskIndex = Math.abs(Math.round(task.progress * totalSteps)) - 1,
