@@ -23,38 +23,41 @@ Because Go Live stores the SSH and MySQL passwords to your production server, it
 
 This encryption key must be exactly 32 bytes, Base64-encoded. Because of this requirement, it's probably best to use the built-in key generator.
 
-### Go Live Settings
+### Credentials
 
-Go Live needs to know quite a bit about your production server in order to deploy your changes. All the form fields may seem daunting at first, but the overall process is fairly straightforward:
+Go Live uses SSH to access your local and remote servers and run the various commands needed to deploy a Craft site from staging to production. You'll need to provide SSH credentials for the local and remote servers, and SSH credentials for the remote server.
 
-1. Run some optional console commands on the server you're deploying _from_
-1. Dump the staging database
+All actions will be performed using these credentials, so keep permissions in mind if you want Go Live to be able modify files on the remote server.
+
+### Settings
+
+The Go Live process always follows this basic pattern:
+
+1. Run some optional console commands on the local server.
+1. Dump the staging database.
 1. Copy the database dump file to your production server via SFTP.
 1. Import the database dump file to your production MySQL database.
-1. Run some optional console commands on the server you're deploying _to_
+1. Run some optional console commands on the remote server.
 
 #### 1: Before Backup
-<img src="doc/images/golive-settings-1.png" alt="Go Live Before Backup Settings" style="max-width: 100%;">
-
+* **Working Directory:** The directory from which to execute each command.
 * **Commands to Run Before Backup:** In each row of the table, write a console command that will run on the current system prior to backing up the databse. This would typically consist of commands like `git add` or `git push` to publish files that have changed in staging.
 
 #### 2: Backup Staging Database
-<img src="doc/images/golive-settings-2.png" alt="Go Live Backup Settings" style="max-width: 100%;">
 
 * **Exclude Tables From Backup:** In each row of the table, write the non-prefixed name of a table that you do not want backed up and sent to production. This would typically include tables that gather user-generated data that would be otherwise overwritten during the deployment.
 * **Keep Backup File?:** If the switch is on, the SQL backup file will be kept after performing the backup. Otherwise, it will be deleted as soon as the deployment finishes.
 
 #### 3: Copy Backup to Production
-<img src="doc/images/golive-settings-3.png" alt="Go Live Copy Backup Settings" style="max-width: 100%;">
 
-**Important: The credentials provided in this section are used in all steps from here on. The MySQL commands in step 4 and any user-provided commands in step 5 are all executed via SSH. Make sure you provide credentials with sufficient permission to perform all of the actions that follow.**
+* **Backup File Destination: ** A **writable folder** to which the database dump will be copied via SFTP.
 
-* **Production SFTP Hostname:** The hostname or IP address used to access the remote server via SSH and SFTP.
-* **Production SSH Username:** The username to use when logging in.
-* **Production SSH Password:** The password to use when logging in.
 
 #### 4: Import Backup to Production
-<img src="doc/images/golive-settings-4.png" alt="Go Live Import Settings" style="max-width: 100%;">
+
+* **Keep Backup File?:** If the switch is on, the SQL backup file will be kept after importing the backup. Otherwise, it will be deleted as soon as the import finishes.
 
 #### 5: After Import
-<img src="doc/images/golive-settings-5.png" alt="Go Live After Import Settings" style="max-width: 100%;">
+
+* **Working Directory:** The directory from which to execute each command.
+* **Commands to Run After Import:** In each row of the table, write a console command that will run on the remote system after importing the databse. This would typically consist of commands like `git pull` or `grunt build` to pull in files that were changed in staging or need to be compiled/minified for production use.
