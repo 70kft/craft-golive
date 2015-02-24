@@ -14,7 +14,7 @@ class Golive_DeployController extends BaseController {
         'backupFileName' => uniqid('goLive_') . '.sql'
       )
     );
-    craft()->tasks->closeAndRun();
-    $this->returnJson([]);
+    $output = craft()->tasks->runPendingTasks();
+    craft()->end();
   }
 }

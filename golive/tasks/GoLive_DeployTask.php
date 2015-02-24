@@ -15,6 +15,7 @@ class GoLive_DeployTask extends BaseTask {
   }
 
   public function runStep($step) {
+    craft()->goLive_settings->verifySettings();
 
     $tasks = craft()->goLive_task->enumerateTasks();
     $settings = $this->getSettings();

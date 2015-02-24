@@ -21,7 +21,7 @@ class GoLiveVariable {
    */
   public function __construct() {
     $this->settings = craft()->plugins->getPlugin('GoLive')->getSettings();
-    $this->enabled = craft()->plugins->getPlugin('GoLive')->isGoLiveEnabled();
+    $this->enabled = craft()->goLive_settings->isPluginEnabled();
   }
 
   /**

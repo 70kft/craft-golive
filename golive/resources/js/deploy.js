@@ -71,7 +71,7 @@
           return this;
         }
 
-        GoLiveComponent.taskRunnerRequest.abort();
+        // GoLiveComponent.taskRunnerRequest.abort();
 
         var totalSteps = GoLiveComponent.tasks.length,
           taskIndex = Math.abs(Math.round(task.progress * totalSteps)) - 1,
