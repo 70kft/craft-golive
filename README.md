@@ -2,6 +2,8 @@
 
 Go Live makes moving changes from staging to production as easy as pressing a button!
 
+![Go Live gif](doc/images/golive-process.gif)
+
 ## Installation
 
 To install Go Live, copy the `golive/` folder into `craft/plugins/`, and then go to **Settings &rsaquo; Plugins** and click the **Install** button next to "Go Live".
