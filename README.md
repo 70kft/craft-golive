@@ -10,6 +10,23 @@ To install Go Live, copy the `golive/` folder into `craft/plugins/`, and then go
 
 When you first install Go Live, you'll be shown a brief introduction that explains how Go Live does its thing. After closing the introductory wizard, you'll be looking at the **Encryption Key** page.
 
+### Environment Variables
+
+#### goLive_encryptionKey
+```
+'goLive_encryptionKey' => ''
+
+```
+
+Sets the encryption key used to encrypt and decrypt passwords. You'll get lots of warnings if this is not set.
+
+#### goLive_enabled
+```
+'goLive_enabled' => true
+
+```
+
+If set to `false`, hides all of the plugin's UI in the Craft CP. This can be useful in environments that share the same database as staging, but from which you do not want to perform deployments. Also useful to avoid deploying production to production, which would presumably break the universe.
 
 ### Encryption Key
 
