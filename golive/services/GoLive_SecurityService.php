@@ -116,12 +116,7 @@ class GoLive_SecurityService extends SecurityService {
     $this->securityManager = new CSecurityManager();
     $this->securityManager->init();
 
-    $this->securityManager->cryptAlgorithm = array(
-      'rijndael-256',
-      '',
-      'cbc',
-      ''
-    );
+    $this->securityManager->cryptAlgorithm = 'rijndael-256';
 
     $this->securityManager->setEncryptionKey($this->_getEncryptionKey());
   }
