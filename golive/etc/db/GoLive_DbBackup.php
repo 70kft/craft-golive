@@ -48,6 +48,7 @@ class GoLive_DbBackup extends DbBackup
     'assetindexdata',
     'assettransformindex',
     'sessions',
+    'tasks',
     'templatecaches',
     'templatecachecriteria',
     'templatecacheelements'
